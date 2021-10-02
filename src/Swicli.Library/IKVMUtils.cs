@@ -22,8 +22,9 @@
 *
 *********************************************************/
 
+using System;
 using System.Diagnostics;
-using java.lang;
+//using java.lang;
 #if USE_IKVM
 using JavaClass = java.lang.Class;
 using Type = System.Type;
@@ -40,16 +41,18 @@ namespace Swicli.Library
 
         public static void cliStartDbg()
         {
-         //   ikvm.debugger.Debugger.MainStart(false, 5005);
+             cliStartDbg(false, 5005);
         }
         public static void cliStartDbg(bool server, int port)
         {
-            ikvm.debugger.Debugger.MainStart(server, port);
+            //ikvm.debugger.Debugger.MainStart(server, port);
+			///System.Object[] paramz = new System.Object[]{server, port};
+			Type.GetType("ikvm.debugger.Debugger").GetMethod("MainStart").Invoke(null,  new System.Object[]{server, port});
         }
         public static void cliStartJmx()
         {
-         //   cliStartJmx(9999);
-            ;
+            cliStartJmx(9999);
+         //   ;
         }
         public static void cliStartJmx(int port9999)
         {
@@ -61,7 +64,7 @@ namespace Swicli.Library
                 {
                     java.lang.Integer.parseInt(java.lang.System.getProperty("com.sun.management.jmxremote.port"));
                 }
-                catch (NumberFormatException nfe)
+                catch (java.lang.NumberFormatException nfe)
                 {
                     port9999 = 9999;
                 }
@@ -73,7 +76,8 @@ namespace Swicli.Library
             java.lang.System.setProperty("com.sun.management.jmxremote.ssl", "false");
             java.lang.System.setProperty("com.sun.management.jmxremote.port", "" + port9999);
 
-            sun.management.Agent.startAgent();
+			//sun.management.Agent.startAgent().
+            Type.GetType("sun.management.Agent").GetMethod("startAgent").Invoke(null,  new System.Object[0]);
 
         }
 #endif
